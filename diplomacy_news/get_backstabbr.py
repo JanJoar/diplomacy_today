@@ -10,7 +10,7 @@ from diplomacy_news.get_war_map import get_war_map
 
 def get_backstabbr(force=False):
     base_url = "https://www.backstabbr.com"
-    url = base_url + "/game/KGB/5178831816753152"
+    url = base_url + "/game/Kppen-Climate-Classif/4840823518265344"
     res = requests.get(url)
     bs = BeautifulSoup(res.text, "lxml")
     stage = get_property("stage", res)
