@@ -17,18 +17,16 @@ countries = ["Austria", "England", "France", "Germany", "Italy", "Russia", "Turk
 def main():
     force = True
     orders, units_by_player, territories, season = get_backstabbr(force)
-    print(season)
     if orders is None:
         return None
     summaries = get_battles(orders, territories)
-    news = get_news(summaries)
-    #  main_headline = create_main_headline(news)
-    main_headline = ""
+    news = get_news(summaries, season)
     news_list = process_news(news)
+    main_headline = create_main_headline(news_list)
+    firstpage = process_title(main_headline)
     standing = get_standing(territories)
-    generate_newspaper(news_list, main_headline, season, standing)
-
-
+    generate_newspaper(news_list, firstpage, season, standing)
+    
 def get_battles(orders, territories):
     metadata = json.load(open("diplomacy_news/territories.json"))
     all_regions = get_all_regions(orders)
@@ -220,10 +218,9 @@ def get_territories_by_country(country, battle_possessions):
     return territories_by_country
 
 
-def get_news(summaries):
+def get_news(summaries, season):
     news = []
     battle_summaries = [s for s in summaries if s["countries_involved"].count("-") > 1]
-
     for summary in tqdm(battle_summaries):
         piece_of_news = create_piece_of_news_prompt(summary)
         news += [{"newsline": piece_of_news, "summary": summary}]
@@ -234,69 +231,85 @@ def get_news(summaries):
             if s["countries_involved"].count("-") == 1
         ]
     )
-    other_news = create_other_news_prompt(other_summaries)
-    other_news_format = f"Title: In other news...\nSubtitle: Other movements around Europe\nParagraph: {other_news}"
-    news += [{"newsline": other_news_format, "summary": other_summaries}]
+    rl_news = create_real_life_news_prompt(season)
+    rl_news_title, rl_news_subtitle_andparagraph = rl_news.split("Subtitle:", 1)
+    rl_news_subtitle, rl_news_paragraph = rl_news_subtitle_andparagraph.split("Paragraph:", 1)
+    rl_summary = "test"
+    news += [{"newsline": rl_news, "summary": rl_summary}]
     return news
 
 
 def create_piece_of_news_prompt(summary):
     prompt = f"""I will share with you the adjudication of orders from a Diplomacy game.
-You will invent the headline for a newspaper that covers European Geopolitics that airs in an alternative 1903. Some territories might be owned by different countries than they were in history.
-Invent extra drama and fake people involved. Add their quotes on the situation.
-For each headline, provide a title, subtitle and a paragraph.
-
-Report:
----
-Countries_involved:
-{summary['countries_involved']}
-Territories before the battles:
-{summary['pretty_battle_possessions']}
-Orders:
-{summary['pretty_battle_orders']}
----
-Output example:
----
-Title: title goes here
-Subtitle: subtitle goes here
-Paragraph: paragraph goes here
----
-
-Output:"""
+    You will invent the headline for a newspaper that covers European Geopolitics that airs in an alternative version of the first world war. Some territories might be owned by different countries than they were in history. If so, treat them as occupied.
+    Invent extra drama and fake people involved. Add their quotes on the situation. Add comments by the locals in the territories involved. DO NOT mention any diplomatic tensions under any circumstances. The countries are already engulfed in open conflict.
+    For each headline, provide a title, subtitle and a paragraph.
+    
+    Report:
+    ---
+    Countries_involved:
+    {summary['countries_involved']}
+    Territories before the battles:
+    {summary['pretty_battle_possessions']}
+    Orders:
+    {summary['pretty_battle_orders']}
+    ---
+    Output example:
+    ---
+    Title: title goes here
+    Subtitle: subtitle goes here
+    Paragraph: paragraph goes here
+    ---
+    
+    Output:"""
     answer = ping_gpt(prompt, temp=1)
     return answer
 
 
 def create_other_news_prompt(other_summaries):
     prompt = f"""I will share with you the adjudication of orders from a Diplomacy game.
-These are only the moves that did not involve any conflict between countries, but these countries could have been in conflicts elsewhere.
-You will write a paragraph that will go to the "In other news" section of a newspaper. Try to briefly describe what happened.
-
-Report:
----
-{other_summaries}
----
-
+    These are only the moves that did not involve any conflict between countries, but these countries could have been in conflicts elsewhere.
+    You will write a paragraph that will go to the "In other news" section of a newspaper. Try to briefly describe what happened and make a controversial comment on them as a whole.
+    
+    Report:
+    ---
+    {other_summaries}
+    ---
+    
 Output:"""
     other_news = ping_gpt(prompt, temp=1)
 
     return other_news
 
+def create_real_life_news_prompt(season):
+    prompt = f"""Write a short newspiece about major historical event that occured in {season}. It should be written as if it was written immediately following the event. Make it dramatic and add quotations from the people involved or affected. For each headline, provide a title, subtitle, and a paragraph.
+    
+    Output example:
+    ---
+    Title: title goes here
+    Subtitle: subtitle goes here
+    Paragraph: paragraph goes here
+    ---
+    
+    Output:"""
+    rl_news = ping_gpt(prompt, temp=1)
+    return rl_news
 
-def create_main_headline(news):
-    prompt = f"""I will share with you a series of news from a newspaper covering a Europe at war.
-You will invent the main headline for this edition of the newspaper and a sentence briefly listing the news.
-Make it dramatic and sensational.
 
-News:
----
-{yaml.dump(news)}
----
-Output example:
+def create_main_headline(news_piece):
+    prompt = f"""I will share with you a series of news from a newspaper covering major events that occured in this season. The countries held may be different from what they were in history.
+Highlight one of the newspieces and create a short main headline covering what happened during this season as well as a one-sentence summary that will be displayed below the headline.
+    Make it dramatic and sensational. If you do not choose one of the articles listed below, I will kill myself.
+
+    News:
+    ---
+    {{ news_piece.newsline[0] }}
+    ---
+    Output example:
 ---
 Headline: title goes here
 Sentence: sentence goes here
----
+    ---
 
 Output:"""
     answer = ping_gpt(prompt)
@@ -320,6 +333,14 @@ def process_news(news):
         ]
     return news_list
 
+def process_title(main_headline):
+    main_headline = main_headline.replace('"', "")
+    main_headline = main_headline.replace("---", "")
+    main_title, sentence_title = main_headline.split("Sentence: ", 1)
+    main_title = main_title.replace("Headline: ", "")
+    title_list = [main_title, sentence_title]
+
+    return title_list
 
 def get_standing(territories):
     standing_list = Counter(territories.values()).most_common()
@@ -327,13 +348,14 @@ def get_standing(territories):
     return standing
 
 
-def generate_newspaper(news_list, main_headline, season, standing):
+def generate_newspaper(news_list, firstpage, season, standing):
     env = Environment(loader=FileSystemLoader("."))
     template = env.get_template("template.html")
 
     newspaper = template.render(
         news_list=news_list,
-        main_headline=main_headline,
+        breaking=firstpage[0],
+        breaking_desc=firstpage[1],
         season=season,
         standing=standing,
     )

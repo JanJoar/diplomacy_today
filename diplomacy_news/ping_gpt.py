@@ -2,6 +2,7 @@ import os
 from functools import lru_cache
 
 import requests
+import time
 
 endpoints = {
     "gpt-3.5-turbo": "https://api.openai.com/v1/chat/completions",
@@ -12,9 +13,9 @@ endpoints = {
 
 @lru_cache(500)
 def ping_gpt(prompt, max_tokens=400, model_name="gpt-4", temp=0):
-    OPENAI_API_KEY = os.environ["OPENAI_API_KEY"]
+    OPENAI_API_KEY = "Hehe skoj"
     #  model_name = "text-davinci-003"
-    #  model_name = "gpt-3.5-turbo"
+    model_name = "gpt-3.5-turbo"
     endpoint = endpoints[model_name]
     headers = {
         "Authorization": f"Bearer {OPENAI_API_KEY}",
@@ -22,14 +23,18 @@ def ping_gpt(prompt, max_tokens=400, model_name="gpt-4", temp=0):
     json_data = get_json_data(model_name, prompt, max_tokens, temp)
     response = requests.post(endpoint, headers=headers, json=json_data)
     res = response.json()
+    print(res)
+    print("-------")
+    print(response)
     answer = parse_res(model_name, res)
+    time.sleep(10)
     return answer
 
 
 def ping_gpt_again(reply, prompt, answer, model_name="gpt-4"):
-    OPENAI_API_KEY = os.environ["OPENAI_API_KEY"]
+    OPENAI_API_KEY = "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"
     #  model_name = "text-davinci-003"
-    #  model_name = "gpt-3.5-turbo"
+    model_name = "gpt-3.5-turbo"
     endpoint = endpoints[model_name]
     headers = {
         "Authorization": f"Bearer {OPENAI_API_KEY}",

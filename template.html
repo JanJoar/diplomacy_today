@@ -4,7 +4,10 @@
     <link rel="stylesheet" href="style.css">
     <title>Diplomacy Today</title>
     <meta name="viewport" content="width=device-width">
-
+    <link rel="icon" href="https://21jovo.ssis.nu/embed/favicon.ico">
+    <meta property="og:title" content="Diplomacy Today">
+    <meta property="og:description" content="Accurate reporting on geopolitical developments in europe at the turn of the century">
+    <meta property="og:image" content="https://21jovo.ssis.nu/embed/D.png">
 </head>
 <body>
 <div class="head">
@@ -15,10 +18,11 @@
 
 				{% endfor %}
 				</span></div>
-        <header>Diplomacy Today</header>
+      <header> {{ breaking }}</header>
     </div>
-
-		<div class="subhead">York, MA - <span id="season">{{season}}</span> - Seven Pages</div>
+    <div class="subhead"> {{ breaking_desc }} </div>
+    
+    <div class="subhead">Geneva, Ch - <span id="season">{{season}}</span></div>
 </div>
 <div class="content">
     <div class="collumns">
