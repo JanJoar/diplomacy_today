@@ -1,0 +1,26 @@
+#+title: Diplomacy Today
+
+* What is this project?
+
+This is a continuation of ~nraw~'s project to automatically create AI-generated newspapers based on HTML templating and the utalization of OpenAI's API. It has been used by me in a number of games and have made iterative improvements based on the input of the other players. These include, but are not limited to;
+
+- A title based on the headlines of the articles.
+- Improvements to the phrasing of the AI.
+- The removal of tedious summaries.
+- News based on real life events that occur outside of europe on the given season.
+- More realistic news articles, with comments made by people involved.
+
+* How do I use the project?
+
+The project was originally intended just to be used for students of class TE21D at the Stockholm Science & Innovation School (SSIS), but work is slowly being done to improve portability and deployability. For now this is what you can do:
+
+- Set the ~OPENAI_API_KEY~ environment variable.
+- Set the url of your backstabbr game in ~get_backstabbr.py~.
+
+The program is run by executing the ~main.py~ file which then generates the appropriate pictures in ~./assets~ and the ~index.hmtl~. These as well as the ~style.css~ file should be pushed to a server where they can then be viewed.
+
+* Why does it take so long to run?
+
+There is a timer between each call to the OpenAI API. This is because the number of units performing orders of intrest later on in the game triggers OpenAI's rate-limiter. Personally I find this unnecessary on OpenAI's part since they have an underlying rate-limiter in the price of the API service. If you want to improve the speed at which it is run (To test things out perhaps?) simply remove the ~time.sleep(10)~ code on line 31 in ~ping_gpt.py~.
+   
+
