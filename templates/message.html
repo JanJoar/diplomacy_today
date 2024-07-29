@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <script src="static/theme.js" defer></script>
+    <link rel="stylesheet" href="static/style.css">
+    <title>Message Board</title>
+  </head>
+<body>
+    <div class="container">
+        <div class="card">
+          <header>Message Board</header>
+          <p class="subhead">Welcome {{ current_user }}</p>
+          <div class="card-body">
+            <form action="" method="post">
+                <div class="form-group">
+                    <textarea id="message" name="message" class="form-control">{{ user_message }}</textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Save Message</button>
+            </form>
+          </div>
+          <a href="{{ url_for('logout') }}" class="btn btn-secondary logout-btn">Logout</a>
+        </div>
+    </div>
+</body>
+</html>
