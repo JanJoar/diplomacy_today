@@ -1,0 +1,128 @@
+/* Theme Colors */
+.theme-light {
+    --primary-bg-color: #fffff8;
+    --secondary-bg-color: #eeeeee;
+    --tertiary-bg-color: #f9f7f1;
+    --primary-text-color: #212121;
+    --secondary-text-color: #111111;
+    --tertiary-text-color: #595959;
+}
+.theme-dark {
+    --primary-bg-color: #111111;
+    --secondary-bg-color: #212121;
+    --tertiary-bg-color: #000000;
+    --primary-text-color: #eeeee5;
+    --secondary-text-color: #f9f7f1;
+    --tertiary-text-color: #dddcc1;
+}
+
+/* General Styling */
+body {
+    font-family: 'Droid Serif', serif;
+    font-size: 14px;
+    color: var(--primary-text-color);
+    background-color: var(--primary-bg-color);
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+header {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    font-size: 80px;
+    text-transform: uppercase;
+    display: inline-block;
+    line-height: 72px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+p {
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+.subhead {
+    text-transform: uppercase;
+    border-bottom: 2px solid var(--secondary-text-color);
+    border-top: 2px solid var(--secondary-text-color);
+    padding: 12px 0;
+    text-align: center;
+}
+
+/* Container */
+.container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Card */
+.card {
+    background-color: var(--secondary-bg-color);
+    border: 1px solid var(--tertiary-bg-color);
+    border-radius: 8px;
+    padding: 20px;
+    width: 100%; /* Full width of the container */
+    max-width: 600px; /* Default max-width; can be adjusted */
+    box-sizing: border-box; /* Ensures padding is included in total width */
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    position: relative; /* Make the card position relative for absolute positioning inside */
+}
+.card-body {
+    padding: 20px;
+}
+.card-footer {
+    text-align: right;
+}
+
+/* Form */
+.form-group {
+    margin-bottom: 15px;
+}
+.form-control {
+    width: calc(80% - 22px); /* Adjusted to account for padding */
+    padding: 15px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    border: 1px solid var(--tertiary-bg-color);
+    border-radius: 4px;
+    font-size: 16px;
+}
+textarea.form-control {
+    height: 100px; /* Adjust this value to make the textarea bigger */
+    resize: vertical;
+    max-height: 30em;
+}
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+.btn-primary {
+    background-color: var(--primary-text-color);
+    color: var(--primary-bg-color);
+}
+.btn-primary:hover {
+    background-color: var(--tertiary-text-color);
+}
+.btn-secondary {
+    background-color: var(--tertiary-bg-color);
+    color: var(--primary-text-color);
+}
+.btn-secondary:hover {
+    background-color: var(--secondary-bg-color);
+}
+.logout-btn {
+    position: absolute;
+    right: 20px; /* Adjust this value to position the button to the right */
+    bottom: 20px; /* Adjust this value to align vertically */
+}

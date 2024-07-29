@@ -1,0 +1,9 @@
+{
+    "austria": {"password": "KaiserFranz"},
+    "germany": {"password": "KaiserWilhem"},
+    "russia": {"password": "TsarNicholas"},
+    "turkey": {"password": "SultanOsman"},
+    "england": {"password": "Queen Victoria"},
+    "italy": {"password": "KingEmanuel"},
+    "france": {"password": "PresidentClemeneu"}
+}
