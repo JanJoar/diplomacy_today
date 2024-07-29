@@ -10,6 +10,7 @@ This is a continuation of ~nraw~'s project to automatically create AI-generated 
 - News based on real life events that occur outside of Europe on the given season.
   - These can sometimes run into issues, such as spring 1914 often times resulting in reports on the beginnings of WW1, after players have already been fighting for 14 years. 
 - More realistic news articles, with comments made by people involved.
+- The ability for players to login and issue comments on the situation that then turns into in-universe articles (plausible deniability on phrasing!).
 
 * How do I use the project?
 
