@@ -1,9 +1,9 @@
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 import json
 import os
 
 app = Flask(__name__)
-app.secret_key = 'your_secret_key'
+app.secret_key = 'f63e4ef09ab00ca7eb3519f3'
 
 def load_users():
     with open('users.json') as f:
@@ -43,6 +43,14 @@ def load_user_message(user):
                 return entry.get('message', "")
     return ""
 
+def delete_user_message(user):
+    if os.path.exists('data.json'):
+        with open('data.json', 'r') as f:
+            messages = json.load(f)
+        messages = [entry for entry in messages if entry.get('user') != user]
+        with open('data.json', 'w') as f:
+            json.dump(messages, f, indent=4)
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -68,6 +76,14 @@ def message():
     
     user_message = load_user_message(user)
     return render_template('message.html', current_user=user, user_message=user_message)
+
+@app.route('/delete', methods=['POST'])
+def delete():
+    if 'user' not in session:
+        return redirect(url_for('login'))
+    user = session['user']
+    delete_user_message(user)
+    return redirect(url_for('message'))
 
 @app.route('/logout')
 def logout():
