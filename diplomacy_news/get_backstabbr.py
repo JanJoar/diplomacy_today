@@ -9,6 +9,7 @@ from diplomacy_news.get_war_map import get_war_map
 
 
 def get_backstabbr(force=False):
+    print("Reading backstabbr...")
     base_url = "https://www.backstabbr.com"
     url = base_url + "/game/Kppen-Climate-Classif/4840823518265344"
     res = requests.get(url)
@@ -48,7 +49,8 @@ def get_property(property_name, res):
 
 
 def get_previous_news_season():
-    previous_news = Path("index.html").read_text()
+    print("Getting previous news season...")
+    previous_news = Path("templates/index.html").read_text()
     bs = BeautifulSoup(previous_news, "lxml")
     previous_news_season = bs.find("span", {"id": "season"}).text
     return previous_news_season
