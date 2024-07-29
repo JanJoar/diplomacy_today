@@ -13,7 +13,9 @@ endpoints = {
 
 @lru_cache(500)
 def ping_gpt(prompt, max_tokens=400, model_name="gpt-4", temp=0):
-    OPENAI_API_KEY = "Hehe skoj"
+    print("Connecting to OpenAI...\n")
+    time.sleep(3)
+    OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
     #  model_name = "text-davinci-003"
     model_name = "gpt-3.5-turbo"
     endpoint = endpoints[model_name]
@@ -27,9 +29,7 @@ def ping_gpt(prompt, max_tokens=400, model_name="gpt-4", temp=0):
     print("-------")
     print(response)
     answer = parse_res(model_name, res)
-    time.sleep(10)
     return answer
-
 
 def ping_gpt_again(reply, prompt, answer, model_name="gpt-4"):
     OPENAI_API_KEY = "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"
