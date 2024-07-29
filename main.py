@@ -1,6 +1,7 @@
 import json
 import re
 import os
+import random
 from collections import Counter
 from pathlib import Path
 
@@ -235,15 +236,15 @@ def get_country_announcements(file_path='data.json'):
 def get_news(summaries, season, announcements):
     news = []
     battle_summaries = [s for s in summaries if s["countries_involved"].count("-") > 1]
-    
-    for summary in tqdm(battle_summaries):
-        piece_of_news = create_piece_of_news_prompt(summary)
-        news.append({"newsline": piece_of_news, "summary": summary})
-    
+
     for announcement in announcements:
         piece_of_news = create_announcement_promt(announcement)
         news.append({"newsline": piece_of_news, "summary": announcement})
     
+    for summary in tqdm(battle_summaries):
+        piece_of_news = create_piece_of_news_prompt(summary)
+        news.append({"newsline": piece_of_news, "summary": summary})
+        
     other_summaries = "\n".join(
         [
             s["pretty_battle_orders"]
@@ -255,6 +256,7 @@ def get_news(summaries, season, announcements):
     rl_news_title, rl_news_subtitle_andparagraph = rl_news.split("Subtitle:", 1)
     rl_news_subtitle, rl_news_paragraph = rl_news_subtitle_andparagraph.split("Paragraph:", 1)
     news.append({"newsline": rl_news, "summary": {"title": rl_news_title.strip(), "subtitle": rl_news_subtitle.strip(), "paragraph": rl_news_paragraph.strip()}})
+    random.shuffle(news)
     
     return news
 
@@ -285,7 +287,6 @@ def create_piece_of_news_prompt(summary):
     return answer
 
 def create_announcement_promt(announcement):
-    print(announcement)
     prompt = f"""You are a newspaper publishing in the middle of an alternate version of the first world war. I will share with you comments made by various imperial powers fighting to control the continent. These are official announcements by their respective governements or their leaders. You will write a short article about this, creating a title, subtitle and a paragraph. Some territories might be owned by different countries than they were in history. If so, treat them as occupied. DO NOT mention any diplomatic tensions under any circumstances. The countries are already engulfed in open conflict. Add comments by other fictional or historical leaders and characters to create a dramatic article. You must follow the templating system below with no exceptions.
     
     Report:
@@ -324,7 +325,7 @@ Output:"""
     return other_news
 
 def create_real_life_news_prompt(season):
-    prompt = f"""Write a short newspiece about major historical event that occured in {season}. It should be written as if it was written immediately following the event. Make it dramatic and add quotations from the people involved or affected. For each headline, provide a title, subtitle, and a paragraph.
+    prompt = f"""Write a short newspiece about major historical event that occured in {season}. It should be written as if it was written immediately following the event. Make it dramatic and add quotations from the people involved or affected. For each headline, provide a title, subtitle, and a paragraph. You must follow the templating system below exactly with no exceptions.
     
     Output example:
     ---
@@ -338,25 +339,30 @@ def create_real_life_news_prompt(season):
     return rl_news
 
 
-def create_main_headline(news_piece):
-    prompt = f"""I will share with you a series of news from a newspaper covering major events that occured in this season. The countries held may be different from what they were in history.
-Highlight one of the newspieces and create a short main headline covering what happened during this season as well as a one-sentence summary that will be displayed below the headline.
-    Make it dramatic and sensational. If you do not choose one of the articles listed below, I will kill myself.
+def create_main_headline(news_list):
+    headlines = []
+    for news_piece in news_list:
+        title = news_piece["newsline"][0]  # Extract the title from the tuple
+        headlines.append(title)
+    prompt = f"""I will share with you a series of news from a newspaper covering major events that occurred this season. The countries held may be different from what they were in history.
+Highlight one of the news pieces and create a short main headline covering what happened during this season as well as a one-sentence summary that will be displayed below the headline.
+Make it dramatic and sensational. If you do not choose one of the articles listed below, I will kill myself.
 
-    News:
-    ---
-    {{ news_piece.newsline[0] }}
-    ---
-    Output example:
+News:
+---
+{ "\n".join(headlines) }
+---
+Output example:
 ---
 Headline: title goes here
 Sentence: sentence goes here
-    ---
+---
 
 Output:"""
-    answer = ping_gpt(prompt)
-    return answer
 
+    headline = ping_gpt(prompt, temp=1)
+    
+    return headline
 
 def process_news(news):
     news_list = []
@@ -390,8 +396,9 @@ def get_standing(territories):
     return standing
 
 def generate_newspaper(news_list, firstpage, season, standing):
+    print("Generating newspaper...")
     env = Environment(loader=FileSystemLoader("."))
-    template = env.get_template("template.html")
+    template = env.get_template("./templates/template.html")
 
     newspaper = template.render(
         news_list=news_list,
@@ -400,7 +407,7 @@ def generate_newspaper(news_list, firstpage, season, standing):
         season=season,
         standing=standing,
     )
-    Path("index.html").write_text(newspaper)
+    Path("./templates/index.html").write_text(newspaper)
 
 
 if __name__ == "__main__":
