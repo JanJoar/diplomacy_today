@@ -20,8 +20,17 @@ The project was originally intended just to be used for students of class TE21D 
 
 The program is run by executing the ~main.py~ file which then generates the appropriate pictures in ~./assets~ and the ~index.hmtl~. These as well as the ~style.css~ file should be pushed to a server where they can then be viewed.
 
+To allow players to issue declarations or comment on geopolitical affairs through the newspaper, change the passwords in ~users.json~, distribute the credentials to your players and run run the ~app.py~ script. The ~data.json~ file is intended to be purged between each turn so that only powers that actually want to say something are included in the next issue.
+
+** Dependencies
+
+The major dependency is on selenium and through it Mozilla Firefox or a geckodriver compatible browser. Other dependencies are:
+
+- ~tqdm~
+- ~jinja2~
+
 * Why does it take so long to run?
 
-There is a timer between each call to the OpenAI API. This is because the number of units performing orders of interest later on in the game triggers OpenAI's rate-limiter. Personally I find this unnecessary on OpenAI's part since they have an underlying rate-limiter in the price of the API service. If you want to improve the speed at which it is run (To test things out perhaps?) simply remove the ~time.sleep(10)~ code on line 31 in ~ping_gpt.py~.
+There is a timer between each call to the OpenAI API. This is because the number of units performing orders of interest later on in the game triggers OpenAI's rate-limiter. Personally I find this unnecessary on OpenAI's part since they have an underlying rate-limiter in the price of the API service. If you want to improve the speed at which it is run (To test things out perhaps?) simply remove the ~time.sleep(3)~ code on line 31 in ~ping_gpt.py~.
    
 Have fun!

@@ -1,5 +1,6 @@
 import json
 import re
+import os
 from collections import Counter
 from pathlib import Path
 
@@ -20,7 +21,8 @@ def main():
     if orders is None:
         return None
     summaries = get_battles(orders, territories)
-    news = get_news(summaries, season)
+    announcements = get_country_announcements(file_path='data.json')
+    news = get_news(summaries, season, announcements)
     news_list = process_news(news)
     main_headline = create_main_headline(news_list)
     firstpage = process_title(main_headline)
@@ -217,13 +219,31 @@ def get_territories_by_country(country, battle_possessions):
     ]
     return territories_by_country
 
+def get_country_announcements(file_path='data.json'):
+    if not os.path.exists(file_path):
+        return []  # Return an empty list if the file doesn't exist
 
-def get_news(summaries, season):
+    with open(file_path, 'r') as file:
+        try:
+            messages = json.load(file)
+        except json.JSONDecodeError:
+            return []  # Return an empty list if JSON is invalid
+
+    # Extract and return messages
+    return messages    
+
+def get_news(summaries, season, announcements):
     news = []
     battle_summaries = [s for s in summaries if s["countries_involved"].count("-") > 1]
+    
     for summary in tqdm(battle_summaries):
         piece_of_news = create_piece_of_news_prompt(summary)
-        news += [{"newsline": piece_of_news, "summary": summary}]
+        news.append({"newsline": piece_of_news, "summary": summary})
+    
+    for announcement in announcements:
+        piece_of_news = create_announcement_promt(announcement)
+        news.append({"newsline": piece_of_news, "summary": announcement})
+    
     other_summaries = "\n".join(
         [
             s["pretty_battle_orders"]
@@ -234,16 +254,15 @@ def get_news(summaries, season):
     rl_news = create_real_life_news_prompt(season)
     rl_news_title, rl_news_subtitle_andparagraph = rl_news.split("Subtitle:", 1)
     rl_news_subtitle, rl_news_paragraph = rl_news_subtitle_andparagraph.split("Paragraph:", 1)
-    rl_summary = "test"
-    news += [{"newsline": rl_news, "summary": rl_summary}]
+    news.append({"newsline": rl_news, "summary": {"title": rl_news_title.strip(), "subtitle": rl_news_subtitle.strip(), "paragraph": rl_news_paragraph.strip()}})
+    
     return news
-
 
 def create_piece_of_news_prompt(summary):
     prompt = f"""I will share with you the adjudication of orders from a Diplomacy game.
-    You will invent the headline for a newspaper that covers European Geopolitics that airs in an alternative version of the first world war. Some territories might be owned by different countries than they were in history. If so, treat them as occupied.
+    You will invent an article for a newspaper that covers European Geopolitics that airs in an alternative version of the first world war. Some territories might be owned by different countries than they were in history. If so, treat them as occupied.
     Invent extra drama and fake people involved. Add their quotes on the situation. Add comments by the locals in the territories involved. DO NOT mention any diplomatic tensions under any circumstances. The countries are already engulfed in open conflict.
-    For each headline, provide a title, subtitle and a paragraph.
+    For each headline, provide a title, subtitle and a paragraph. You must follow the templating system below with no exceptions.
     
     Report:
     ---
@@ -265,6 +284,29 @@ def create_piece_of_news_prompt(summary):
     answer = ping_gpt(prompt, temp=1)
     return answer
 
+def create_announcement_promt(announcement):
+    print(announcement)
+    prompt = f"""You are a newspaper publishing in the middle of an alternate version of the first world war. I will share with you comments made by various imperial powers fighting to control the continent. These are official announcements by their respective governements or their leaders. You will write a short article about this, creating a title, subtitle and a paragraph. Some territories might be owned by different countries than they were in history. If so, treat them as occupied. DO NOT mention any diplomatic tensions under any circumstances. The countries are already engulfed in open conflict. Add comments by other fictional or historical leaders and characters to create a dramatic article. You must follow the templating system below with no exceptions.
+    
+    Report:
+    ---
+    Country:
+    {announcement['user']}
+    Message:
+    {announcement['message']}
+    ---
+    Output example:
+    ---
+    Title: title goes here
+    Subtitle: subtitle goes here
+    Paragraph: paragraph goes here
+    ---
+    
+    Output:"""
+
+    announcement_news = ping_gpt(prompt, temp=1)
+
+    return announcement_news
 
 def create_other_news_prompt(other_summaries):
     prompt = f"""I will share with you the adjudication of orders from a Diplomacy game.
@@ -346,7 +388,6 @@ def get_standing(territories):
     standing_list = Counter(territories.values()).most_common()
     standing = [s[0] + " " + str(s[1]) for s in standing_list]
     return standing
-
 
 def generate_newspaper(news_list, firstpage, season, standing):
     env = Environment(loader=FileSystemLoader("."))
