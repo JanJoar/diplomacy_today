@@ -29,6 +29,7 @@ The major dependency is on selenium and through it Mozilla Firefox or a geckodri
 
 - ~tqdm~
 - ~jinja2~
+- ~flask~ and ~flask-login~ (for the commentaries)
 
 * Why does it take so long to run?
 
