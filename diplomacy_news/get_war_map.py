@@ -1,15 +1,20 @@
+import os
 import io
 from pathlib import Path
 
 import cairosvg
 from bs4 import BeautifulSoup
 from PIL import Image
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.common.by import By
-from webdriver_manager.chrome import ChromeDriverManager
 
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.firefox.options import Options
+from selenium.webdriver.firefox.service import Service
+from webdriver_manager.firefox import GeckoDriverManager
+from selenium.webdriver.firefox.service import Service as FirefoxService
+
+service = FirefoxService(executable_path=GeckoDriverManager().install())
+driver = webdriver.Firefox(service=service)
 
 def get_war_map(url):
     svg_element = get_svg_element(url)
@@ -33,8 +38,8 @@ def get_war_map(url):
 def get_svg_element(url):
     options = Options()
     options.add_argument("headless")
-    s = Service(ChromeDriverManager().install())
-    driver = webdriver.Chrome(service=s, options=options)
+    s = FirefoxService(executable_path=GeckoDriverManager().install())
+    driver = webdriver.Firefox(service=s, options=options)
     driver.maximize_window()
     driver.get(url)
     element = driver.find_element(By.XPATH, '//*[@id="map"]').get_attribute("innerHTML")
