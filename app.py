@@ -51,6 +51,10 @@ def delete_user_message(user):
         with open('data.json', 'w') as f:
             json.dump(messages, f, indent=4)
 
+@app.route('/')
+def home():
+    return render_template('index.html')
+            
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -64,7 +68,7 @@ def login():
             return 'Invalid credentials', 403
     return render_template('login.html')
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/message', methods=['GET', 'POST'])
 def message():
     if 'user' not in session:
         return redirect(url_for('login'))
@@ -88,7 +92,7 @@ def delete():
 @app.route('/logout')
 def logout():
     session.pop('user', None)
-    return redirect(url_for('login'))
+    return redirect(url_for('home'))
 
 if __name__ == '__main__':
     app.run(debug=True)
