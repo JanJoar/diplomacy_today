@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, session, jsonify
+from flask import Flask, render_template, request, redirect, url_for, session, jsonify, send_from_directory
 import json
 import os
 
@@ -93,6 +93,16 @@ def delete():
 def logout():
     session.pop('user', None)
     return redirect(url_for('home'))
+
+@app.route('/menu')
+def menu():
+    archive_dir = '/home/jovo/programming/diplomacy_today/archive/'
+    files = [f for f in os.listdir(archive_dir)]
+    return render_template('menu.html', files=files)
+
+@app.route('/archive/<filename>')
+def view_file(filename):
+    return send_from_directory('./archive', filename)
 
 if __name__ == '__main__':
     app.run(debug=True)

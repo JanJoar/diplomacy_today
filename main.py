@@ -2,6 +2,7 @@ import json
 import re
 import os
 import random
+import shutil
 from collections import Counter
 from pathlib import Path
 
@@ -19,6 +20,7 @@ countries = ["Austria", "England", "France", "Germany", "Italy", "Russia", "Turk
 def main():
     force = True
     orders, units_by_player, territories, season = get_backstabbr(force)
+    save_to_archive(season)
     if orders is None:
         return None
     summaries = get_battles(orders, territories)
@@ -29,6 +31,16 @@ def main():
     firstpage = process_title(main_headline)
     standing = get_standing(territories)
     generate_newspaper(news_list, firstpage, season, standing)
+    print("Done!")
+
+def save_to_archive(season):
+    current_newspaper = "./templates/index.html"
+    filename_no_spaces = season.replace(" ", "-")
+    filename = filename_no_spaces + ".html"
+    destination = "./archive"
+    destination_path = os.path.join(destination, season)
+    shutil.move(current_newspaper, destination_path)
+    print(f"Earlier article moved and saved as: {destination_path}")
     
 def get_battles(orders, territories):
     metadata = json.load(open("diplomacy_news/territories.json"))
@@ -41,7 +53,6 @@ def get_battles(orders, territories):
         battles, battles_orders, battles_possessions, battles_coords, metadata
     )
     return summaries
-
 
 def get_all_regions(orders):
     all_regions = []
@@ -284,6 +295,7 @@ def create_piece_of_news_prompt(summary):
     
     Output:"""
     answer = ping_gpt(prompt, temp=1)
+    print("Created an article based on the orders made.")
     return answer
 
 def create_announcement_promt(announcement):
@@ -306,7 +318,7 @@ def create_announcement_promt(announcement):
     Output:"""
 
     announcement_news = ping_gpt(prompt, temp=1)
-
+    print("Created great power announcement article.")
     return announcement_news
 
 def create_other_news_prompt(other_summaries):
@@ -336,6 +348,7 @@ def create_real_life_news_prompt(season):
     
     Output:"""
     rl_news = ping_gpt(prompt, temp=1)
+    print("Created a real life article.")
     return rl_news
 
 
@@ -361,6 +374,7 @@ Sentence: sentence goes here
 Output:"""
 
     headline = ping_gpt(prompt, temp=1)
+    print("Created the main headline.")
     
     return headline
 
@@ -396,7 +410,6 @@ def get_standing(territories):
     return standing
 
 def generate_newspaper(news_list, firstpage, season, standing):
-    print("Generating newspaper...")
     env = Environment(loader=FileSystemLoader("."))
     template = env.get_template("./templates/template.html")
 
