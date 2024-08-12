@@ -25,9 +25,6 @@ def ping_gpt(prompt, max_tokens=400, model_name="gpt-4", temp=0):
     json_data = get_json_data(model_name, prompt, max_tokens, temp)
     response = requests.post(endpoint, headers=headers, json=json_data)
     res = response.json()
-    print(res)
-    print("-------")
-    print(response)
     answer = parse_res(model_name, res)
     return answer
 
