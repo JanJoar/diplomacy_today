@@ -349,13 +349,14 @@ textarea.form-control {
 }
 .btn {
     display: inline-block;
-    padding: 10px 20px;
+    padding: 15px 20px;
     font-size: 16px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
     text-align: center;
     text-decoration: none;
+    margin: 5px;
     transition: background-color 0.3s ease;
 }
 .btn-primary {
@@ -376,4 +377,26 @@ textarea.form-control {
     position: absolute;
     right: 20px; /* Adjust this value to position the button to the right */
     bottom: 20px; /* Adjust this value to align vertically */
+}
+
+li {
+    background-color: var(--secondary-text-color);
+    color: var(--primary-text-color);
+    border-radius: 5px;
+    margin: 0; /* Optional: Removes default margin */
+    padding: 0; /* Optional: Removes default padding */
+    margin-bottom: 10px;
+}
+
+a {
+    color: var(--primary-bg-color);
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
 }
