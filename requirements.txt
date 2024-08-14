@@ -11,3 +11,4 @@ tqdm==4.65.0
 webdriver_manager==4.0.0
 flask==3.0.3
 flask-login==0.6.3
+gunicorn==22.0.0
