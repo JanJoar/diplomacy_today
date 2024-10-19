@@ -8,6 +8,8 @@ endpoints = {
     "gpt-3.5-turbo": "https://api.openai.com/v1/chat/completions",
     "text-davinci-003": "https://api.openai.com/v1/completions",
     "gpt-4": "https://api.openai.com/v1/chat/completions",
+    "gpt-4o": "https://api.openai.com/v1/chat/completions",
+    "gpt-4o-mini": "https://api.openai.com/v1/chat/completions",
 }
 
 
@@ -16,8 +18,7 @@ def ping_gpt(prompt, max_tokens=400, model_name="gpt-4", temp=0):
     print("Connecting to OpenAI...\n")
     time.sleep(3)
     OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-    #  model_name = "text-davinci-003"
-    model_name = "gpt-3.5-turbo"
+    model_name = "gpt-4o-mini"
     endpoint = endpoints[model_name]
     headers = {
         "Authorization": f"Bearer {OPENAI_API_KEY}",
