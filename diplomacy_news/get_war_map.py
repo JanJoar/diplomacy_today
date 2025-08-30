@@ -13,9 +13,6 @@ from selenium.webdriver.firefox.service import Service
 from webdriver_manager.firefox import GeckoDriverManager
 from selenium.webdriver.firefox.service import Service as FirefoxService
 
-service = FirefoxService(executable_path=GeckoDriverManager().install())
-driver = webdriver.Firefox(service=service)
-
 def get_war_map(url):
     svg_element = get_svg_element(url)
 
