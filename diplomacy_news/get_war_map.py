@@ -34,7 +34,7 @@ def get_war_map(url):
 
 def get_svg_element(url):
     options = Options()
-    options.add_argument("headless")
+    options.add_argument("--headless")
     s = FirefoxService(executable_path=GeckoDriverManager().install())
     driver = webdriver.Firefox(service=s, options=options)
     driver.maximize_window()
