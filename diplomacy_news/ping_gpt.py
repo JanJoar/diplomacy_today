@@ -4,6 +4,8 @@ from functools import lru_cache
 import requests
 import time
 
+model_name = "gpt-4o-mini"
+
 endpoints = {
     "gpt-3.5-turbo": "https://api.openai.com/v1/chat/completions",
     "text-davinci-003": "https://api.openai.com/v1/completions",
@@ -14,11 +16,10 @@ endpoints = {
 
 
 @lru_cache(500)
-def ping_gpt(prompt, max_tokens=400, model_name="gpt-4", temp=0):
+def ping_gpt(prompt, max_tokens=400, model_name=model_name, temp=0):
     print("Connecting to OpenAI...\n")
     time.sleep(3)
     OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-    model_name = "gpt-4o-mini"
     endpoint = endpoints[model_name]
     headers = {
         "Authorization": f"Bearer {OPENAI_API_KEY}",
@@ -29,10 +30,9 @@ def ping_gpt(prompt, max_tokens=400, model_name="gpt-4", temp=0):
     answer = parse_res(model_name, res)
     return answer
 
-def ping_gpt_again(reply, prompt, answer, model_name="gpt-4"):
+def ping_gpt_again(reply, prompt, answer, model_name=model_name):
     OPENAI_API_KEY = "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"
     #  model_name = "text-davinci-003"
-    model_name = "gpt-3.5-turbo"
     endpoint = endpoints[model_name]
     headers = {
         "Authorization": f"Bearer {OPENAI_API_KEY}",
@@ -47,7 +47,7 @@ def ping_gpt_again(reply, prompt, answer, model_name="gpt-4"):
 
 
 def get_json_data(model_name, prompt, max_tokens=400, temp=0):
-    if model_name in ["gpt-3.5-turbo", "gpt-4"]:
+    if model_name in ["gpt-3.5-turbo", "gpt-4", "gpt-4o", "gpt-4o-mini"]:
         json_data = {
             "model": model_name,
             "messages": [{"role": "user", "content": prompt}],
@@ -65,7 +65,7 @@ def get_json_data(model_name, prompt, max_tokens=400, temp=0):
 
 
 def parse_res(model_name, res):
-    if model_name in ["gpt-3.5-turbo", "gpt-4"]:
+    if model_name in ["gpt-3.5-turbo", "gpt-4", "gpt-4o", "gpt-4o-mini"]:
         answer = res["choices"][0]["message"]["content"]
     else:
         answer = res["choices"][0]["text"]
