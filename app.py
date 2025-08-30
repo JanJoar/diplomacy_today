@@ -52,7 +52,7 @@ def delete_user_message(user):
         with open('data.json', 'w') as f:
             json.dump(messages, f, indent=4)
 
-@app.route('/diplomacy/')
+@app.route('/')
 def home():
     return render_template('index.html')
             
