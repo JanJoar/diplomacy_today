@@ -31,7 +31,7 @@ def ping_gpt(prompt, max_tokens=400, model_name=model_name, temp=0):
     return answer
 
 def ping_gpt_again(reply, prompt, answer, model_name=model_name):
-    OPENAI_API_KEY = "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"
+    OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
     #  model_name = "text-davinci-003"
     endpoint = endpoints[model_name]
     headers = {
