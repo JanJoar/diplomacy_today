@@ -357,13 +357,14 @@ def create_main_headline(news_list):
     for news_piece in news_list:
         title = news_piece["newsline"][0]  # Extract the title from the tuple
         headlines.append(title)
+    joined_headlines = "\n".join(headlines)
     prompt = f"""I will share with you a series of news from a newspaper covering major events that occurred this season. The countries held may be different from what they were in history.
 Highlight one of the news pieces and create a short main headline covering what happened during this season as well as a one-sentence summary that will be displayed below the headline.
 Make it dramatic and sensational. If you do not choose one of the articles listed below, I will kill myself.
 
 News:
 ---
-{ "\n".join(headlines) }
+{joined_headlines}
 ---
 Output example:
 ---
