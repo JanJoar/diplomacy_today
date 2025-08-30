@@ -291,7 +291,6 @@ def create_piece_of_news_prompt(summary):
     Title: title goes here
     Subtitle: subtitle goes here
     Paragraph: paragraph goes here
-    ---
     
     Output:"""
     answer = ping_gpt(prompt, temp=1)
@@ -313,7 +312,6 @@ def create_announcement_promt(announcement):
     Title: title goes here
     Subtitle: subtitle goes here
     Paragraph: paragraph goes here
-    ---
     
     Output:"""
 
@@ -344,7 +342,6 @@ def create_real_life_news_prompt(season):
     Title: title goes here
     Subtitle: subtitle goes here
     Paragraph: paragraph goes here
-    ---
     
     Output:"""
     rl_news = ping_gpt(prompt, temp=1)
