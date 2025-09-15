@@ -18,7 +18,7 @@ endpoints = {
 @lru_cache(500)
 def ping_gpt(prompt, max_tokens=400, model_name=model_name, temp=0):
     print("Connecting to OpenAI...\n")
-    time.sleep(3)
+    time.sleep(1)
     OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
     endpoint = endpoints[model_name]
     headers = {
