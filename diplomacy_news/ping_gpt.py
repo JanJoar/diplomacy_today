@@ -65,7 +65,6 @@ def get_json_data(model_name, prompt, max_tokens=400, temp=0):
 
 
 def parse_res(model_name, res):
-    print(res)
     if model_name in ["gpt-3.5-turbo", "gpt-4", "gpt-4o", "gpt-4o-mini"]:
         answer = res["choices"][0]["message"]["content"]
     else:
