@@ -56,7 +56,7 @@ def delete_user_message(user):
 def home():
     return render_template('index.html')
             
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/diplomacy/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         username = request.form['username']
