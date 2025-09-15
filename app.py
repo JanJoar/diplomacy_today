@@ -5,6 +5,8 @@ import re
 
 app = Flask(__name__)
 app.secret_key = 'f63e4ef09ab00ca7eb3519f3'
+sub = Blueprint('sub', __name__, url_prefix='/diplomacy')
+
 
 def load_users():
     with open('users.json') as f:
