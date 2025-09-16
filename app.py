@@ -69,15 +69,15 @@ def login():
         users = load_users()
         if username in users and users[username]['password'] == password:
             session['user'] = username
-            return redirect(url_for('message'))
+            return redirect('/diplomacy/message')
         else:
             return 'Invalid credentials', 403
     return render_template('login.html')
 
-@app.route('/diplomacy/message', methods=['GET', 'POST'])
+@app.route('/message', methods=['GET', 'POST'])
 def message():
     if 'user' not in session:
-        return redirect(url_for('login'))
+        return redirect('/diplomacy/login')
     
     user = session['user']
     if request.method == 'POST':
@@ -90,10 +90,10 @@ def message():
 @app.route('/delete', methods=['POST'])
 def delete():
     if 'user' not in session:
-        return redirect(url_for('login'))
+        return redirect('/diplomacy/login')
     user = session['user']
     delete_user_message(user)
-    return redirect(url_for('message'))
+    return redirect('/diplomacy/message')
 
 @app.route('/logout')
 def logout():
