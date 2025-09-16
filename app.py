@@ -98,7 +98,7 @@ def logout():
 
 @app.route('/menu')
 def menu():
-    archive_dir = './archive/'
+    archive_dir = './diplomacy/archive/'
     files = [f for f in os.listdir(archive_dir)]
     file_names_without_extension = [
         os.path.splitext(f)[0].replace('-', ' ')
