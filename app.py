@@ -74,7 +74,7 @@ def login():
             return 'Invalid credentials', 403
     return render_template('login.html')
 
-@app.route('/message', methods=['GET', 'POST'])
+@app.route('/diplomacy/message', methods=['GET', 'POST'])
 def message():
     if 'user' not in session:
         return redirect(url_for('login'))
