@@ -6,10 +6,6 @@ from werkzeug.middleware.proxy_fix import ProxyFix
 
 app = Flask(__name__)
 app.secret_key = 'f63e4ef09ab00ca7eb3519f3'
-app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1)
-app.config['APPLICATION_ROOT'] = '/diplomacy'
-
-sub = Blueprint('diplomacy', __name__, url_prefix='/diplomacy')
 
 def load_users():
     with open('users.json') as f:
