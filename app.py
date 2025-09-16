@@ -94,7 +94,7 @@ def delete():
 @app.route('/logout')
 def logout():
     session.pop('user', None)
-    return redirect('/diplomacy')
+    return redirect('/diplomacy/')
 
 @app.route('/menu')
 def menu():
