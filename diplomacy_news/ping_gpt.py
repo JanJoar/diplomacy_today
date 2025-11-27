@@ -4,7 +4,7 @@ from functools import lru_cache
 import requests
 import time
 
-model_name = "gpt-4o-mini"
+model_name = "gpt-5-nano"
 
 endpoints = {
     "gpt-3.5-turbo": "https://api.openai.com/v1/chat/completions",
@@ -12,13 +12,15 @@ endpoints = {
     "gpt-4": "https://api.openai.com/v1/chat/completions",
     "gpt-4o": "https://api.openai.com/v1/chat/completions",
     "gpt-4o-mini": "https://api.openai.com/v1/chat/completions",
+    "gpt-5-nano": "https://api.openai.com/v1/chat/completions",
 }
 
 
 @lru_cache(500)
 def ping_gpt(prompt, max_tokens=400, model_name=model_name, temp=0):
     print("Connecting to OpenAI...\n")
-    time.sleep(1)
+    time.sleep(1) # This is to avoid tripping up openai's rate
+                  # limiting when sending many orders.
     OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
     endpoint = endpoints[model_name]
     headers = {
@@ -47,7 +49,7 @@ def ping_gpt_again(reply, prompt, answer, model_name=model_name):
 
 
 def get_json_data(model_name, prompt, max_tokens=400, temp=0):
-    if model_name in ["gpt-3.5-turbo", "gpt-4", "gpt-4o", "gpt-4o-mini"]:
+    if model_name in ["gpt-3.5-turbo", "gpt-4", "gpt-4o", "gpt-4o-mini", "gpt-5-nano"]:
         json_data = {
             "model": model_name,
             "messages": [{"role": "user", "content": prompt}],
@@ -65,7 +67,7 @@ def get_json_data(model_name, prompt, max_tokens=400, temp=0):
 
 
 def parse_res(model_name, res):
-    if model_name in ["gpt-3.5-turbo", "gpt-4", "gpt-4o", "gpt-4o-mini"]:
+    if model_name in ["gpt-3.5-turbo", "gpt-4", "gpt-4o", "gpt-4o-mini", "gpt-5-nano"]:
         answer = res["choices"][0]["message"]["content"]
     else:
         answer = res["choices"][0]["text"]
