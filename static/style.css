@@ -29,7 +29,9 @@ header{
     display: inline-block;
     line-height: 72px;
     margin-bottom: 20px;
-
+    margin-left: 1em;
+    margin-right: 1em;
+    
 }
 p{
     margin-top: 0;
@@ -300,6 +302,7 @@ p{
     }
     .container{
         margin-top: 25%;
+        height: 100%;
     }
 
 }
