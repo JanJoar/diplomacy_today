@@ -11,7 +11,7 @@ from diplomacy_news.get_war_map import get_war_map
 def get_backstabbr(force=False):
     print("Reading backstabbr...")
     base_url = "https://www.backstabbr.com"
-    url = base_url + "/game/Basic-Every-Other-Game/5121660612902912"
+    url = base_url + "/game/FHS-Kandidat/5160556830982144"
     res = requests.get(url)
     bs = BeautifulSoup(res.text, "lxml")
     stage = get_property("stage", res)
