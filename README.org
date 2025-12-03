@@ -39,9 +39,9 @@ be viewed.
 To allow players to issue declarations or comment on geopolitical
 affairs through the newspaper, change the passwords in ~users.json~,
 distribute the credentials to your players and run run the ~app.py~
-script. The ~data.json~ file is intended to be purged between each turn
-so that only powers that actually want to say something are included
-in the next issue.
+script using a ~WSGI~ server like [[https://gunicorn.org/][gunicorn]]. The ~data.json~ file is
+intended to be purged between each turn so that only powers that
+actually want to say something are included in the next issue.
 
 ** Dependencies
 
